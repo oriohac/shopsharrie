@@ -34,10 +34,37 @@ class _HomeState extends State<Home> {
   }
 
   late Future<ProductsResponse> products;
+  ScrollController scrollController = ScrollController();
+  bool atStart = true;
+  bool atEnd = false;
+
+  void scrollLeft() {
+    scrollController.animateTo(
+      scrollController.offset - 50,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
+  }
+
+  void scrollRight() {
+    scrollController.animateTo(
+      scrollController.offset + 50,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     products = getProducts();
+    scrollController.addListener(() {
+      setState(() {
+        atStart = scrollController.offset <= 0;
+        atEnd = scrollController.position.maxScrollExtent ==
+            scrollController.offset;
+      });
+    });
   }
 
   @override
@@ -52,7 +79,12 @@ class _HomeState extends State<Home> {
             child: Center(
               child: Text(
                 "Sharrie's Signature",
-                style: TextStyle(color: Color(0xff408C2B),fontFamily: 'redressed',fontWeight: FontWeight.w400,fontSize: 24,),
+                style: TextStyle(
+                  color: Color(0xff408C2B),
+                  fontFamily: 'redressed',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 24,
+                ),
               ),
             ),
           ),
@@ -71,12 +103,25 @@ class _HomeState extends State<Home> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Welcome, Jane'),
+              const Text(
+                'Welcome, Jane',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'poppins',
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xff0A0B0A),
+                ),
+              ),
               const TextField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search),
                   hintText: 'Search',
+                  hintStyle: TextStyle(
+                      color: Color(0xffB1B2B2),
+                      fontFamily: 'inter',
+                      fontSize: 16),
                   border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xffD2D3D3)),
                     borderRadius: BorderRadius.all(
                       Radius.circular(6),
                     ),
@@ -86,12 +131,28 @@ class _HomeState extends State<Home> {
               const SizedBox(
                 height: 6,
               ),
-              const Row(
+              Row(
                 children: [
-                  Text("Just for you"),
-                  Spacer(),
-                  Icon(Icons.arrow_back_ios_new),
-                  Icon(Icons.arrow_forward_ios_outlined),
+                  const Text(
+                    "Just for you",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'lora',
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff363939),
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new),
+                    color: atStart ? Colors.grey : Colors.black,
+                    onPressed: atStart ? null : scrollLeft,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_forward_ios_outlined),
+                    color: atEnd ? Colors.grey : Colors.black,
+                    onPressed: atEnd ? null : scrollRight,
+                  ),
                 ],
               ),
               FutureBuilder<ProductsResponse>(
@@ -121,6 +182,7 @@ class _HomeState extends State<Home> {
                     return SizedBox(
                       height: 200,
                       child: ListView.builder(
+                        controller: scrollController,
                         scrollDirection: Axis.horizontal,
                         itemCount: randomSubset.length,
                         itemBuilder: (context, index) {
@@ -133,11 +195,12 @@ class _HomeState extends State<Home> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              EmptyCartScreen()));
+                                              const EmptyCartScreen()));
                                 },
                                 child: Card(
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
-                                elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(2)),
+                                  elevation: 0,
                                   color: Colors.white,
                                   child: Padding(
                                     padding: const EdgeInsets.all(6.0),
@@ -178,11 +241,21 @@ class _HomeState extends State<Home> {
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   textAlign: TextAlign.start,
-                                                  style: const TextStyle(),
+                                                  style: const TextStyle(
+                                                    fontSize: 10,
+                                                    fontFamily: 'poppins',
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff797A7B),
+                                                  ),
                                                 ),
                                                 Text(
                                                   '₦${prefix.currentprice.toString()}',
-                                                  style: const TextStyle(),
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontFamily: 'poppins',
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xff363939),
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -217,18 +290,22 @@ class _HomeState extends State<Home> {
                                                   backgroundColor: Colors.white,
                                                   shape: RoundedRectangleBorder(
                                                     side: const BorderSide(
-                                                        color: Colors.green),
+                                                        color:
+                                                            Color(0xff408c2b)),
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            6),
+                                                            2.37),
                                                   ),
                                                 ),
                                                 child: const Text(
                                                   'Add to Cart',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                      color: Colors.green,
-                                                      fontSize: 7.1),
+                                                    fontSize: 7.1,
+                                                    fontFamily: 'poppins',
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff408c2b),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -247,14 +324,35 @@ class _HomeState extends State<Home> {
                   }
                 },
               ),
-              const Row(
+              Row(
                 children: [
-                  Text("Deals"),
-                  Spacer(),
-                  Text("View all"),
+                  const Text(
+                    "Deals",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'lora',
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff363939),
+                    ),
+                  ),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'View all',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'inter',
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xff797a7b),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              const Divider(),
+              const Divider(
+                color: Color(0xffcccbcb),
+              ),
               FutureBuilder<ProductsResponse>(
                 future: products,
                 builder: (context, snapshot) {
@@ -290,8 +388,9 @@ class _HomeState extends State<Home> {
                               );
                             },
                             child: Card(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
-                                elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(2)),
+                              elevation: 0,
                               color: Colors.white,
                               child: Column(
                                 children: [
@@ -331,12 +430,24 @@ class _HomeState extends State<Home> {
                                                     maxLines: 2,
                                                     overflow:
                                                         TextOverflow.ellipsis,
-                                                    style: const TextStyle(),
+                                                    style: const TextStyle(
+                                                      fontSize: 10,
+                                                      fontFamily: 'poppins',
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Color(0xff797a7b),
+                                                    ),
                                                   ),
                                                   const SizedBox(height: 2),
                                                   Text(
                                                     '₦${prefix.currentprice.toString()}',
-                                                    style: const TextStyle(),
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontFamily: 'poppins',
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Color(0xff363939),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -400,8 +511,16 @@ class _HomeState extends State<Home> {
                   }
                 },
               ),
-              const Text("Our Collections"),
-              const Divider(),
+              const Text(
+                "Our Collections",
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'poppins',
+                  fontWeight: FontWeight.w300,
+                  color: Color(0xff0a0b0a),
+                ),
+              ),
+              const Divider(color: Color(0xffcccbcb)),
               FutureBuilder<ProductsResponse>(
                 future: products,
                 builder: (context, snapshot) {
@@ -427,8 +546,9 @@ class _HomeState extends State<Home> {
                           var prefix = snapshot.data!.items[index];
 
                           return Card(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
-                                elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(2)),
+                            elevation: 0,
                             color: Colors.white,
                             child: Column(
                               children: [
@@ -465,10 +585,16 @@ class _HomeState extends State<Home> {
                                               children: [
                                                 Text(
                                                   prefix.name,
+                                                  textAlign: TextAlign.center,
                                                   maxLines: 2,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: const TextStyle(),
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontFamily: 'poppins',
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff0a0b0a),
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -532,7 +658,15 @@ class _HomeState extends State<Home> {
               ),
               const Row(
                 children: [
-                  Text("You might like"),
+                  Text(
+                    "You might like",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'lora',
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff363939),
+                    ),
+                  ),
                   Spacer(),
                   Text("View all"),
                 ],
@@ -570,8 +704,9 @@ class _HomeState extends State<Home> {
                           var prefix = randomSubset[index];
 
                           return Card(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
-                                elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(2)),
+                            elevation: 0,
                             color: Colors.white,
                             child: Column(
                               children: [
