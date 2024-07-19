@@ -69,10 +69,10 @@ class _EmptyCartScreenState extends State<EmptyCartScreen> {
                 const Text(
                   'Your Cart is empty',
                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xff0A0B0A),
-                  ),
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff0A0B0A),
+                      fontFamily: 'lora'),
                 ),
                 const SizedBox(height: 16),
                 const Text(
@@ -82,6 +82,7 @@ class _EmptyCartScreenState extends State<EmptyCartScreen> {
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: Color(0xff818181),
+                    fontFamily: 'poppins',
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -108,6 +109,7 @@ class _EmptyCartScreenState extends State<EmptyCartScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         color: Color(0xffffffff),
+                        fontFamily: 'inter',
                       ),
                     ),
                   ),
@@ -117,18 +119,25 @@ class _EmptyCartScreenState extends State<EmptyCartScreen> {
                 ),
                 Row(
                   children: [
-                    const Text("Recently viewed",
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xff0A0B0A),
-                            fontWeight: FontWeight.w300)),
+                    const Text(
+                      "Recently viewed",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xff0A0B0A),
+                        fontWeight: FontWeight.w300,
+                        fontFamily: 'poppins',
+                      ),
+                    ),
                     const Spacer(),
                     TextButton(
                       onPressed: () {},
                       child: const Text(
                         "View all",
-                        style:
-                            TextStyle(color: Color(0xff408C2B), fontSize: 12),
+                        style: TextStyle(
+                          color: Color(0xff408C2B),
+                          fontSize: 12,
+                          fontFamily: 'poppins',
+                        ),
                       ),
                     ),
                   ],
@@ -214,12 +223,22 @@ class _EmptyCartScreenState extends State<EmptyCartScreen> {
                                                       maxLines: 2,
                                                       overflow:
                                                           TextOverflow.ellipsis,
-                                                      style: const TextStyle(),
+                                                      style: const TextStyle(
+                                                        fontFamily: 'poppins',
+                                                        fontWeight: FontWeight.w400,
+                                                        fontSize: 10,
+                                                        color: Color(0xff797A7B)
+                                                      ),
                                                     ),
                                                     const SizedBox(height: 2),
                                                     Text(
                                                       '₦${prefix.currentprice.toString()}',
-                                                      style: const TextStyle(),
+                                                      style: const TextStyle(
+                                                        fontFamily: 'poppins',
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: 14,
+                                                        color: Color(0xff363939)
+                                                      ),
                                                     ),
                                                   ],
                                                 ),

@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
             child: Center(
               child: Text(
                 "Sharrie's Signature",
-                style: TextStyle(color: Colors.green),
+                style: TextStyle(color: Color(0xff408C2B),fontFamily: 'redressed',fontWeight: FontWeight.w400,fontSize: 24,),
               ),
             ),
           ),

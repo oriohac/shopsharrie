@@ -44,6 +44,7 @@ class Productdesc extends StatelessWidget {
                   width: double.infinity,
                   decoration: const BoxDecoration(color: Color(0xffE4F5E0)),
                 ),
+                Image.asset('lib/assets/images/image.svg'),
                 Center(
                   child: Container(
                     margin: const EdgeInsets.only(top: 50),
@@ -83,7 +84,7 @@ class Productdesc extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 48),
-              child: Column(
+child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -94,6 +95,7 @@ class Productdesc extends StatelessWidget {
                           fontSize: 16,
                           fontWeight: FontWeight.w300,
                           color: Color(0xff6E6E6E),
+                          fontFamily: 'poppins',
                         ),
                       ),
                       const Spacer(),
@@ -103,6 +105,7 @@ class Productdesc extends StatelessWidget {
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: Color(0xff408C2B),
+                          fontFamily: 'poppins',
                         ),
                       ),
                     ],
@@ -113,7 +116,9 @@ class Productdesc extends StatelessWidget {
                     style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xff0A0B0A)),
+                        color: Color(0xff0A0B0A),
+                        fontFamily: 'poppins',
+                        ),
                   ),
                   const SizedBox(height: 32),
                   Text(
@@ -122,6 +127,7 @@ class Productdesc extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       color: Color(0xff5A5A5A),
+                      fontFamily: 'poppins',
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -131,6 +137,7 @@ class Productdesc extends StatelessWidget {
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: Color(0xff4EAB35),
+                      fontFamily: 'poppins',
                     ),
                   ),
                   const SizedBox(height: 40),
@@ -144,6 +151,7 @@ class Productdesc extends StatelessWidget {
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: Color(0xff343434),
+                            fontFamily: 'poppins',
                           ),
                         ),
                       ),
@@ -169,6 +177,7 @@ class Productdesc extends StatelessWidget {
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: Color(0xff343434),
+                            fontFamily: 'poppins',
                           ),
                         ),
                       ),
