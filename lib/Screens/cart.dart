@@ -11,8 +11,26 @@ class Cart extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cart'),
-        backgroundColor: const Color.fromARGB(255, 213, 214, 215),
+         actions: const [
+          Text("Cart",
+          style: TextStyle(
+            fontFamily: 'poppins',
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            color: Color(0xff0a0b0a)
+          ),
+          ),
+          Spacer(),
+          Padding(
+            padding: EdgeInsets.only(right: 48.0),
+            child: Icon(
+              Icons.shopping_cart_outlined,
+              size: 20,
+            ),
+          ),
+          Divider(color: Color(0xffcccbcb),)
+        ],
+        backgroundColor: const Color(0xffffffff),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
