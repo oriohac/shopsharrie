@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:shopsharrie/model/productsdata.dart';
-class Cart extends StatelessWidget {
+class Cart extends StatefulWidget {
   final List<Productsdata> cartItems;
 
   Cart({required this.cartItems});
 
   @override
+  State<Cart> createState() => _CartState();
+}
+
+class _CartState extends State<Cart> {
+  late List<Productsdata> cartItems;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    cartItems = widget.cartItems;
+  }
+  @override
   Widget build(BuildContext context) {
-    double totalAmount = cartItems.fold(0, (sum, item) => sum + item.currentprice);
+    double totalAmount = widget.cartItems.fold(0, (sum, item) => sum + item.currentprice);
 
     return Scaffold(
       appBar: AppBar(
@@ -38,9 +50,9 @@ class Cart extends StatelessWidget {
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: cartItems.length,
+                itemCount: widget.cartItems.length,
                 itemBuilder: (context, index) {
-                  var item = cartItems[index];
+                  var item = widget.cartItems[index];
                   return ListTile(
                     leading: Image.network('https://api.timbu.cloud/images/${item.photos[0].url}'),
                     title: Text(item.name),
