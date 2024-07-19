@@ -1,0 +1,687 @@
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:cupertino_icons/cupertino_icons.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shopsharrie/Screens/animatedloading.dart';
+import 'package:shopsharrie/Screens/cart.dart';
+import 'package:shopsharrie/Screens/emptycart.dart';
+import 'package:shopsharrie/Screens/productdesc.dart';
+import 'package:shopsharrie/model/productsdata.dart';
+import 'package:http/http.dart' as http;
+
+class Home extends StatefulWidget {
+  const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  Future<ProductsResponse> getProducts() async {
+    final apiKey = dotenv.env['Apikey'];
+    final appId = dotenv.env['Appid'];
+    final orgId = dotenv.env['organization_id'];
+    const url = 'https://api.timbu.cloud/products';
+    final response = await http.get(
+        Uri.parse("$url?organization_id=$orgId&Apikey=$apiKey&Appid=$appId"));
+    if (response.statusCode == 200) {
+      return ProductsResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Error: Could not retrieve data");
+    }
+  }
+
+  late Future<ProductsResponse> products;
+  @override
+  void initState() {
+    super.initState();
+    products = getProducts();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Center(
+              child: Text(
+                "Sharrie's Signature",
+                style: TextStyle(color: Colors.green),
+              ),
+            ),
+          ),
+          Spacer(),
+          Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: Icon(Icons.shopping_cart_outlined),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.white,
+      body: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Welcome, Jane'),
+              const TextField(
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search),
+                  hintText: 'Search',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(6),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 6,
+              ),
+              const Row(
+                children: [
+                  Text("Just for you"),
+                  Spacer(),
+                  Icon(Icons.arrow_back_ios_new),
+                  Icon(Icons.arrow_forward_ios_outlined),
+                ],
+              ),
+              FutureBuilder<ProductsResponse>(
+                future: products,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: Animatedloading(),
+                    );
+                  } else if (!snapshot.hasData ||
+                      snapshot.data!.items.isEmpty) {
+                    return const Center(
+                      child: Text('No products found'),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else {
+                    final random = Random();
+                    final List<Productsdata> items =
+                        List.from(snapshot.data!.items);
+                    items.shuffle(random);
+                    const int subsetLength = 5;
+                    final List<Productsdata> randomSubset =
+                        items.take(subsetLength).toList();
+                    return SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: randomSubset.length,
+                        itemBuilder: (context, index) {
+                          var prefix = randomSubset[index];
+                          return Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EmptyCartScreen()));
+                                },
+                                child: Card(
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
+                                elevation: 0,
+                                  color: Colors.white,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            child: prefix.photos.isNotEmpty
+                                                ? Padding(
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(
+                                                      2,
+                                                      2,
+                                                      2,
+                                                      2,
+                                                    ),
+                                                    child: Image.network(
+                                                      'https://api.timbu.cloud/images/${prefix.photos[0].url}',
+                                                    ),
+                                                  )
+                                                : Container(),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  prefix.name,
+                                                  maxLines: 3,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.start,
+                                                  style: const TextStyle(),
+                                                ),
+                                                Text(
+                                                  '₦${prefix.currentprice.toString()}',
+                                                  style: const TextStyle(),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              width: 12,
+                                            ),
+                                            SizedBox(
+                                              height: 24,
+                                              width: 56,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                      title: const Text(
+                                                          "Item Added"),
+                                                      content: const Text(
+                                                          "check it in your cart"),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  padding:
+                                                      const EdgeInsets.all(0),
+                                                  backgroundColor: Colors.white,
+                                                  shape: RoundedRectangleBorder(
+                                                    side: const BorderSide(
+                                                        color: Colors.green),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  'Add to Cart',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.green,
+                                                      fontSize: 7.1),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
+              const Row(
+                children: [
+                  Text("Deals"),
+                  Spacer(),
+                  Text("View all"),
+                ],
+              ),
+              const Divider(),
+              FutureBuilder<ProductsResponse>(
+                future: products,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: Animatedloading(),
+                    );
+                  } else if (!snapshot.hasData ||
+                      snapshot.data!.items.isEmpty) {
+                    return const Center(child: Text('No products found'));
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    return SizedBox(
+                      height: 500,
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        itemCount: snapshot.data!.items.length,
+                        itemBuilder: (context, index) {
+                          var prefix = snapshot.data!.items[index];
+
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      Productdesc(product: prefix),
+                                ),
+                              );
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
+                                elevation: 0,
+                              color: Colors.white,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: prefix.photos.isNotEmpty
+                                          ? Padding(
+                                              padding: const EdgeInsets.all(2),
+                                              child: Image.network(
+                                                'https://api.timbu.cloud/images/${prefix.photos[0].url}',
+                                                fit: BoxFit.cover,
+                                              ),
+                                            )
+                                          : Container(),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    prefix.name,
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(),
+                                                  ),
+                                                  const SizedBox(height: 2),
+                                                  Text(
+                                                    '₦${prefix.currentprice.toString()}',
+                                                    style: const TextStyle(),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 24,
+                                              width: 56,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                      title: const Text(
+                                                          "Item Added"),
+                                                      content: const Text(
+                                                          "Check it in your cart"),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(4),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  padding:
+                                                      const EdgeInsets.all(0),
+                                                  backgroundColor: Colors.white,
+                                                  shape: RoundedRectangleBorder(
+                                                    side: const BorderSide(
+                                                        color: Colors.green),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  'Add to Cart',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Colors.green,
+                                                    fontSize: 7.1,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
+              const Text("Our Collections"),
+              const Divider(),
+              FutureBuilder<ProductsResponse>(
+                future: products,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: Animatedloading(),
+                    );
+                  } else if (!snapshot.hasData ||
+                      snapshot.data!.items.isEmpty) {
+                    return const Center(child: Text('No products found'));
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    return SizedBox(
+                      height: 500,
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        itemCount: snapshot.data!.items.length,
+                        itemBuilder: (context, index) {
+                          var prefix = snapshot.data!.items[index];
+
+                          return Card(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
+                                elevation: 0,
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: prefix.photos.isNotEmpty
+                                        ? Padding(
+                                            padding: const EdgeInsets.all(2),
+                                            child: Image.network(
+                                              'https://api.timbu.cloud/images/${prefix.photos[0].url}',
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                        : Container(),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  prefix.name,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 24,
+                                            width: 56,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                    title: const Text(
+                                                        "Item Added"),
+                                                    content: const Text(
+                                                        "Check it in your cart"),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.all(0),
+                                                backgroundColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  side: const BorderSide(
+                                                      color: Colors.green),
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                ),
+                                              ),
+                                              child: const Text(
+                                                'Add to Cart',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.green,
+                                                  fontSize: 7.1,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
+              const Row(
+                children: [
+                  Text("You might like"),
+                  Spacer(),
+                  Text("View all"),
+                ],
+              ),
+              const Divider(),
+              FutureBuilder<ProductsResponse>(
+                future: products,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: Animatedloading(),
+                    );
+                  } else if (!snapshot.hasData ||
+                      snapshot.data!.items.isEmpty) {
+                    return const Center(child: Text('No products found'));
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    final random = Random();
+                    final List<Productsdata> items =
+                        List.from(snapshot.data!.items);
+                    items.shuffle(random);
+                    const int subsetLength = 6;
+                    final List<Productsdata> randomSubset =
+                        items.take(subsetLength).toList();
+                    return SizedBox(
+                      height: 500,
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        itemCount: randomSubset.length,
+                        itemBuilder: (context, index) {
+                          var prefix = randomSubset[index];
+
+                          return Card(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
+                                elevation: 0,
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: prefix.photos.isNotEmpty
+                                        ? Padding(
+                                            padding: const EdgeInsets.all(2),
+                                            child: Image.network(
+                                              'https://api.timbu.cloud/images/${prefix.photos[0].url}',
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                        : Container(),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  prefix.name,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(),
+                                                ),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  '₦${prefix.currentprice.toString()}',
+                                                  style: const TextStyle(),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 24,
+                                            width: 56,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                    title: const Text(
+                                                        "Item Added"),
+                                                    content: const Text(
+                                                        "Check it in your cart"),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.all(0),
+                                                backgroundColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  side: const BorderSide(
+                                                      color: Colors.green),
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                ),
+                                              ),
+                                              child: const Text(
+                                                'Add to Cart',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.green,
+                                                  fontSize: 7.1,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

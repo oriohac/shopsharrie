@@ -1,0 +1,54 @@
+import 'package:flutter/material.dart';
+import 'package:shopsharrie/Screens/cart.dart';
+import 'package:shopsharrie/Screens/home.dart';
+import 'package:shopsharrie/Screens/profile.dart';
+import 'package:shopsharrie/Screens/search.dart';
+import 'package:shopsharrie/Screens/wishlist.dart';
+import 'package:shopsharrie/model/productsdata.dart';
+
+class Screencontroller extends StatefulWidget {
+  const Screencontroller({super.key});
+
+  @override
+  State<Screencontroller> createState() => _ScreencontrollerState();
+}
+
+class _ScreencontrollerState extends State<Screencontroller> {
+  //initiial screen of the BottomNavigation
+  int selectedScreen = 0;
+// function to update the screen according to what's selected in the BottomNavigation
+  void currentScreen(int state) {
+    setState(() {
+      selectedScreen = state;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List screens = [
+      Home(),
+      Wishlist(),
+      Profile(),
+      Search(),
+    ];
+    return Scaffold(
+      body: screens[selectedScreen],
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        currentIndex: selectedScreen,
+        onTap: currentScreen,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.favorite_border), label: 'Wishlist'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person_outlined), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+        ],
+      ),
+    );
+  }
+}
