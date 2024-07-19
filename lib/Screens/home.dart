@@ -40,16 +40,16 @@ class _HomeState extends State<Home> {
 
   void scrollLeft() {
     scrollController.animateTo(
-      scrollController.offset - 50,
-      duration: const Duration(milliseconds: 300),
+      scrollController.offset - 5,
+      duration: const Duration(milliseconds: 100),
       curve: Curves.ease,
     );
   }
 
   void scrollRight() {
     scrollController.animateTo(
-      scrollController.offset + 50,
-      duration: const Duration(milliseconds: 300),
+      scrollController.offset + 5,
+      duration: const Duration(milliseconds: 100),
       curve: Curves.ease,
     );
   }
