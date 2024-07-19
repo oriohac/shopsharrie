@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shopsharrie/Screens/addtocart.dart';
 import 'package:shopsharrie/model/productsdata.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Productdesc extends StatelessWidget {
   final Productsdata product;
@@ -44,7 +45,7 @@ class Productdesc extends StatelessWidget {
                   width: double.infinity,
                   decoration: const BoxDecoration(color: Color(0xffE4F5E0)),
                 ),
-                Image.asset('lib/assets/images/image.svg'),
+                SvgPicture.asset('lib/assets/images/image.svg', height: 200,),
                 Center(
                   child: Container(
                     margin: const EdgeInsets.only(top: 50),
