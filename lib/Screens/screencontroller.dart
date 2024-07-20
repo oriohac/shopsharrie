@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shopsharrie/Screens/cart.dart';
 import 'package:shopsharrie/Screens/home.dart';
 import 'package:shopsharrie/Screens/profile.dart';
 import 'package:shopsharrie/Screens/search.dart';
 import 'package:shopsharrie/Screens/wishlist.dart';
-import 'package:shopsharrie/model/productsdata.dart';
 
 class Screencontroller extends StatefulWidget {
   const Screencontroller({super.key});
@@ -26,22 +24,25 @@ class _ScreencontrollerState extends State<Screencontroller> {
   @override
   Widget build(BuildContext context) {
     List screens = [
-      Home(),
-      Wishlist(),
-      Profile(),
-      Search(),
+      const Home(),
+      const Wishlist(),
+      const Profile(),
+      const Search(),
     ];
     return Scaffold(
       body: screens[selectedScreen],
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
+        backgroundColor: const Color(0xffFFFFFF),
+        selectedItemColor: const Color(0xff1F2223),
         unselectedItemColor: Colors.grey,
+        selectedLabelStyle: const TextStyle(fontSize: 10,),
+        unselectedLabelStyle: const TextStyle(fontSize: 10,),
         showSelectedLabels: true,
         showUnselectedLabels: true,
         currentIndex: selectedScreen,
         onTap: currentScreen,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined,), label: 'Home'),
           BottomNavigationBarItem(
               icon: Icon(Icons.favorite_border), label: 'Wishlist'),
           BottomNavigationBarItem(

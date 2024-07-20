@@ -112,9 +112,15 @@ class _HomeState extends State<Home> {
                   color: Color(0xff0A0B0A),
                 ),
               ),
+              const SizedBox(
+                height: 16,
+              ),
               const TextField(
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Color(0xffB1B2B2),
+                  ),
                   hintText: 'Search',
                   hintStyle: TextStyle(
                       color: Color(0xffB1B2B2),
@@ -129,7 +135,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               const SizedBox(
-                height: 6,
+                height: 16,
               ),
               Row(
                 children: [
@@ -180,7 +186,7 @@ class _HomeState extends State<Home> {
                     final List<Productsdata> randomSubset =
                         items.take(subsetLength).toList();
                     return SizedBox(
-                      height: 200,
+                      height: 225,
                       child: ListView.builder(
                         controller: scrollController,
                         scrollDirection: Axis.horizontal,
@@ -366,186 +372,28 @@ class _HomeState extends State<Home> {
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
-                    return SizedBox(
-                      height: 500,
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                        ),
-                        itemCount: snapshot.data!.items.length,
-                        itemBuilder: (context, index) {
-                          var prefix = snapshot.data!.items[index];
-
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Productdesc(product: prefix),
-                                ),
-                              );
-                            },
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(2)),
-                              elevation: 0,
-                              color: Colors.white,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: prefix.photos.isNotEmpty
-                                          ? Padding(
-                                              padding: const EdgeInsets.all(2),
-                                              child: Image.network(
-                                                'https://api.timbu.cloud/images/${prefix.photos[0].url}',
-                                                fit: BoxFit.cover,
-                                              ),
-                                            )
-                                          : Container(),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    prefix.name,
-                                                    maxLines: 2,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: const TextStyle(
-                                                      fontSize: 10,
-                                                      fontFamily: 'poppins',
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Color(0xff797a7b),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 2),
-                                                  Text(
-                                                    '₦${prefix.currentprice.toString()}',
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                      fontFamily: 'poppins',
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Color(0xff363939),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 24,
-                                              width: 56,
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        AlertDialog(
-                                                      title: const Text(
-                                                          "Item Added"),
-                                                      content: const Text(
-                                                          "Check it in your cart"),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(4),
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  padding:
-                                                      const EdgeInsets.all(0),
-                                                  backgroundColor: Colors.white,
-                                                  shape: RoundedRectangleBorder(
-                                                    side: const BorderSide(
-                                                        color: Colors.green),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            6),
-                                                  ),
-                                                ),
-                                                child: const Text(
-                                                  'Add to Cart',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.green,
-                                                    fontSize: 7.1,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
                       ),
-                    );
-                  }
-                },
-              ),
-              const Text(
-                "Our Collections",
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontFamily: 'poppins',
-                  fontWeight: FontWeight.w300,
-                  color: Color(0xff0a0b0a),
-                ),
-              ),
-              const Divider(color: Color(0xffcccbcb)),
-              FutureBuilder<ProductsResponse>(
-                future: products,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: Animatedloading(),
-                    );
-                  } else if (!snapshot.hasData ||
-                      snapshot.data!.items.isEmpty) {
-                    return const Center(child: Text('No products found'));
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else {
-                    return SizedBox(
-                      height: 500,
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                        ),
-                        itemCount: snapshot.data!.items.length,
-                        itemBuilder: (context, index) {
-                          var prefix = snapshot.data!.items[index];
+                      itemCount: snapshot.data!.items.length,
+                      itemBuilder: (context, index) {
+                        var prefix = snapshot.data!.items[index];
 
-                          return Card(
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    Productdesc(product: prefix),
+                              ),
+                            );
+                          },
+                          child: Card(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(2)),
                             elevation: 0,
@@ -585,15 +433,24 @@ class _HomeState extends State<Home> {
                                               children: [
                                                 Text(
                                                   prefix.name,
-                                                  textAlign: TextAlign.center,
                                                   maxLines: 2,
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   style: const TextStyle(
-                                                    fontSize: 14,
+                                                    fontSize: 10,
                                                     fontFamily: 'poppins',
                                                     fontWeight: FontWeight.w400,
-                                                    color: Color(0xff0a0b0a),
+                                                    color: Color(0xff797a7b),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  '₦${prefix.currentprice.toString()}',
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontFamily: 'poppins',
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xff363939),
                                                   ),
                                                 ),
                                               ],
@@ -627,9 +484,10 @@ class _HomeState extends State<Home> {
                                                 backgroundColor: Colors.white,
                                                 shape: RoundedRectangleBorder(
                                                   side: const BorderSide(
-                                                      color: Colors.green),
+                                                      color: Color(0xff408c2b)),
                                                   borderRadius:
-                                                      BorderRadius.circular(6),
+                                                      BorderRadius.circular(
+                                                          2.37),
                                                 ),
                                               ),
                                               child: const Text(
@@ -649,9 +507,113 @@ class _HomeState extends State<Home> {
                                 ),
                               ],
                             ),
-                          );
-                        },
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+              const Text(
+                "Our Collections",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'poppins',
+                  fontWeight: FontWeight.w300,
+                  color: Color(0xff0a0b0a),
+                ),
+              ),
+              const Divider(color: Color(0xffcccbcb)),
+              FutureBuilder<ProductsResponse>(
+                future: products,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: Animatedloading(),
+                    );
+                  } else if (!snapshot.hasData ||
+                      snapshot.data!.items.isEmpty) {
+                    return const Center(child: Text('No products found'));
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    final List<Productsdata> items =
+                        List.from(snapshot.data!.items);
+                    const int subsetLength = 4;
+                    final List<Productsdata> subset =
+                        items.take(subsetLength).toList();
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
                       ),
+                      itemCount: subset.length,
+                      itemBuilder: (context, index) {
+                        var prefix = snapshot.data!.items[index];
+
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(2)),
+                          elevation: 0,
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: prefix.photos.isNotEmpty
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(2),
+                                          child: Image.network(
+                                            'https://api.timbu.cloud/images/${prefix.photos[0].url}',
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : Container(),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                prefix.name,
+                                                textAlign: TextAlign.center,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontFamily: 'poppins',
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Color(0xff0a0b0a),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     );
                   }
                 },
@@ -660,7 +622,7 @@ class _HomeState extends State<Home> {
                 children: [
                   Text(
                     "You might like",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontFamily: 'lora',
                       fontWeight: FontWeight.w600,
@@ -692,123 +654,118 @@ class _HomeState extends State<Home> {
                     const int subsetLength = 6;
                     final List<Productsdata> randomSubset =
                         items.take(subsetLength).toList();
-                    return SizedBox(
-                      height: 500,
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                        ),
-                        itemCount: randomSubset.length,
-                        itemBuilder: (context, index) {
-                          var prefix = randomSubset[index];
-
-                          return Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(2)),
-                            elevation: 0,
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: prefix.photos.isNotEmpty
-                                        ? Padding(
-                                            padding: const EdgeInsets.all(2),
-                                            child: Image.network(
-                                              'https://api.timbu.cloud/images/${prefix.photos[0].url}',
-                                              fit: BoxFit.cover,
-                                            ),
-                                          )
-                                        : Container(),
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  prefix.name,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(),
-                                                ),
-                                                const SizedBox(height: 2),
-                                                Text(
-                                                  '₦${prefix.currentprice.toString()}',
-                                                  style: const TextStyle(),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 24,
-                                            width: 56,
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      AlertDialog(
-                                                    title: const Text(
-                                                        "Item Added"),
-                                                    content: const Text(
-                                                        "Check it in your cart"),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              4),
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                padding:
-                                                    const EdgeInsets.all(0),
-                                                backgroundColor: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                  side: const BorderSide(
-                                                      color: Colors.green),
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                'Add to Cart',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: Colors.green,
-                                                  fontSize: 7.1,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
                       ),
+                      itemCount: randomSubset.length,
+                      itemBuilder: (context, index) {
+                        var prefix = randomSubset[index];
+
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(2)),
+                          elevation: 0,
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: prefix.photos.isNotEmpty
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(2),
+                                          child: Image.network(
+                                            'https://api.timbu.cloud/images/${prefix.photos[0].url}',
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : Container(),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                prefix.name,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(),
+                                              ),
+                                              const SizedBox(height: 2),
+                                              Text(
+                                                '₦${prefix.currentprice.toString()}',
+                                                style: const TextStyle(),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 24,
+                                          width: 56,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AlertDialog(
+                                                  title:
+                                                      const Text("Item Added"),
+                                                  content: const Text(
+                                                      "Check it in your cart"),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              padding: const EdgeInsets.all(0),
+                                              backgroundColor: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                side: const BorderSide(
+                                                    color: Color(0xff408c2b)),
+                                                borderRadius:
+                                                    BorderRadius.circular(2.37),
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              'Add to Cart',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Colors.green,
+                                                fontSize: 7.1,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     );
                   }
                 },

@@ -224,21 +224,23 @@ class _EmptyCartScreenState extends State<EmptyCartScreen> {
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style: const TextStyle(
-                                                        fontFamily: 'poppins',
-                                                        fontWeight: FontWeight.w400,
-                                                        fontSize: 10,
-                                                        color: Color(0xff797A7B)
-                                                      ),
+                                                          fontFamily: 'poppins',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 10,
+                                                          color: Color(
+                                                              0xff797A7B)),
                                                     ),
                                                     const SizedBox(height: 2),
                                                     Text(
                                                       '₦${prefix.currentprice.toString()}',
                                                       style: const TextStyle(
-                                                        fontFamily: 'poppins',
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 14,
-                                                        color: Color(0xff363939)
-                                                      ),
+                                                          fontFamily: 'poppins',
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 14,
+                                                          color: Color(
+                                                              0xff363939)),
                                                     ),
                                                   ],
                                                 ),
