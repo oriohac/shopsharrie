@@ -39,6 +39,7 @@ class _EmptyCartScreenState extends State<EmptyCartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
         actions: const [
           Spacer(),
@@ -166,143 +167,141 @@ class _EmptyCartScreenState extends State<EmptyCartScreen> {
                       const int subsetLength = 1;
                       final List<Productsdata> randomSubset =
                           items.take(subsetLength).toList();
-                      return SizedBox(
-                        height: 500,
-                        child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 1,
-                          ),
-                          itemCount: randomSubset.length,
-                          itemBuilder: (context, index) {
-                            var prefix = randomSubset[index];
-
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(2)),
-                                elevation: 0,
-                                color: Colors.white,
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: prefix.photos.isNotEmpty
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.all(2),
-                                                child: Image.network(
-                                                  'https://api.timbu.cloud/images/${prefix.photos[0].url}',
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              )
-                                            : Container(),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      prefix.name,
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: const TextStyle(
-                                                          fontFamily: 'poppins',
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          fontSize: 10,
-                                                          color: Color(
-                                                              0xff797A7B)),
-                                                    ),
-                                                    const SizedBox(height: 2),
-                                                    Text(
-                                                      '₦${prefix.currentprice.toString()}',
-                                                      style: const TextStyle(
-                                                          fontFamily: 'poppins',
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontSize: 14,
-                                                          color: Color(
-                                                              0xff363939)),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 24,
-                                                width: 56,
-                                                child: ElevatedButton(
-                                                  onPressed: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (context) =>
-                                                          AlertDialog(
-                                                        title: const Text(
-                                                            "Item Added"),
-                                                        content: const Text(
-                                                            "Check it in your cart"),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(4),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    padding:
-                                                        const EdgeInsets.all(0),
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      side: const BorderSide(
-                                                          color: Colors.green),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              6),
-                                                    ),
-                                                  ),
-                                                  child: const Text(
-                                                    'Add to Cart',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      color: Colors.green,
-                                                      fontSize: 7.1,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
+                      return GridView.builder(
+                        shrinkWrap: true,
+                                            physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 1,
                         ),
+                        itemCount: randomSubset.length,
+                        itemBuilder: (context, index) {
+                          var prefix = randomSubset[index];
+                      
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(2)),
+                              elevation: 0,
+                              color: Colors.white,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: prefix.photos.isNotEmpty
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.all(2),
+                                              child: Image.network(
+                                                'https://api.timbu.cloud/images/${prefix.photos[0].url}',
+                                                fit: BoxFit.cover,
+                                              ),
+                                            )
+                                          : Container(),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    prefix.name,
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                        fontFamily: 'poppins',
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize: 10,
+                                                        color: Color(
+                                                            0xff797A7B)),
+                                                  ),
+                                                  const SizedBox(height: 2),
+                                                  Text(
+                                                    '₦${prefix.currentprice.toString()}',
+                                                    style: const TextStyle(
+                                                        fontFamily: 'poppins',
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 14,
+                                                        color: Color(
+                                                            0xff363939)),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 24,
+                                              width: 56,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                      title: const Text(
+                                                          "Item Added"),
+                                                      content: const Text(
+                                                          "Check it in your cart"),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(4),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                style:
+                                                    ElevatedButton.styleFrom(
+                                                  padding:
+                                                      const EdgeInsets.all(0),
+                                                  backgroundColor:
+                                                      Colors.white,
+                                                  shape:
+                                                      RoundedRectangleBorder(
+                                                    side: const BorderSide(
+                                                    color: Color(0xff408c2b)),
+                                                borderRadius:
+                                                    BorderRadius.circular(2.37),
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  'Add to Cart',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Colors.green,
+                                                    fontSize: 7.1,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       );
                     }
                   },

@@ -249,17 +249,9 @@ class _AddtocartState extends State<Addtocart> {
                             icon: const Icon(Icons.remove, color: Colors.green),
                             onPressed: _decrementCounter,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color(0xffEAEAEA),
-                              ),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text(
-                              '$_counter',
-                              style: const TextStyle(fontSize: 20),
-                            ),
+                          Text(
+                            '$_counter',
+                            style: const TextStyle(fontSize: 20),
                           ),
                           IconButton(
                             icon: const Icon(Icons.add, color: Colors.green),

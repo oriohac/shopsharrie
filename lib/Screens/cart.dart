@@ -89,12 +89,19 @@ class _CartState extends State<Cart> {
         widget.cartItems.fold(0, (sum, item) => sum + item.currentprice);
 
     return Scaffold(
+      backgroundColor: const Color(0xffFFFFFF),
       appBar: AppBar(
-        actions: const [
-          Divider(
-            color: Color(0xffcccbcb),
+        automaticallyImplyLeading: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(left: 28),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.arrow_back)),
           ),
-          Text(
+          const Text(
             "Cart",
             style: TextStyle(
                 fontFamily: 'poppins',
@@ -102,8 +109,8 @@ class _CartState extends State<Cart> {
                 fontSize: 16,
                 color: Color(0xff0a0b0a)),
           ),
-          Spacer(),
-          Padding(
+          const Spacer(),
+          const Padding(
             padding: EdgeInsets.only(right: 48.0),
             child: Icon(
               Icons.shopping_cart_outlined,
@@ -113,264 +120,350 @@ class _CartState extends State<Cart> {
         ],
         backgroundColor: const Color(0xffffffff),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: _cartItems.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Image.network(
-                    'https://api.timbu.cloud/images/${_cartItems[index]['product'].photos[0].url}',
-                    width: 87,
-                    height: 98.26,
-                  ),
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _cartItems[index]['product'].uniqueid,
-                        style: const TextStyle(
-                          fontFamily: 'poppins',
-                          fontWeight: FontWeight.w300,
-                          fontSize: 12,
-                          color: Color(0xff6E6E6E),
-                        ),
-                      ),
-                      Text(
-                        _cartItems[index]['product'].name,
-                        style: const TextStyle(
-                          overflow: TextOverflow.ellipsis,
-                          fontFamily: 'poppins',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Color(0xff0a0b0a),
-                        ),
-                      ),
-                    ],
-                  ),
-                  subtitle: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(0),
-                        height: 24,
-                        width: 66,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: const Color(0xff818181),
-                            ),
-                            borderRadius: BorderRadius.circular(1.83)),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(),
-                              icon: const Icon(
-                                Icons.remove,
-                                size: 7,
-                              ),
-                              onPressed: () => _decrementQuantity(index),
-                            ),
-                            Flexible(
-                              child: Text(
-                                '${_cartItems[index]['quantity'].toInt()}',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'inter',
-                                    fontWeight: FontWeight.w600),
-                                    textAlign: TextAlign.center,
-                              ),
-                            ),
-                            IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(),
-                              icon: const Icon(
-                                Icons.add,
-                                size: 7,
-                              ),
-                              onPressed: () => _incrementQuantity(index),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 22.96,
-                        width: 30.73,
-                        decoration:
-                            const BoxDecoration(color: Color(0xffCC474E)),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.delete,
-                            size: 10,
-                            color: Color(0xffFFFFFF),
-                          ),
-                          onPressed: () {
-                            removeItem(index);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  trailing: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Unit price",
-                        style: TextStyle(
-                          fontFamily: 'poppins',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: Color(0xff5A5A5A),
-                        ),
-                      ),
-                      Text(
-                        'N${_cartItems[index]['product'].currentprice * _cartItems[index]['quantity']}',
-                        style: const TextStyle(
-                          fontFamily: 'poppins',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Color(0xff0a0b0a),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-          Center(
-            child: Card(
-              color: const Color(0xffFEFEFE),
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: const BorderSide(color: Color(0xff408c2b))),
-              child: Column(
-                children: [
-                  const Text('Cart summary'),
-                  Row(
-                    children: [const Text("Sub-total"), Text("$totalAmount")],
-                  ),
-                  Row(
-                    children: [const Text("Delivery"), Text("$deliveryFee")],
-                  ),
-                  Row(
-                    children: [
-                      OutlinedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            side: const BorderSide(
-                              color: Color(0xff363939),
-                            )),
-                        child: const Text(
-                          "Cancel",
-                          style: TextStyle(
-                            color: Color(0xff363939),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              SizedBox(height: 32,),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _cartItems.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Image.network(
+                      'https://api.timbu.cloud/images/${_cartItems[index]['product'].photos[0].url}',
+                      width: 60,
+                      height: 80,
+                    ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _cartItems[index]['product'].uniqueid,
+                          style: const TextStyle(
+                            fontFamily: 'poppins',
+                            fontWeight: FontWeight.w300,
+                            fontSize: 12,
+                            color: Color(0xff6E6E6E),
                           ),
                         ),
+                        Text(
+                          _cartItems[index]['product'].name,
+                          style: const TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            fontFamily: 'poppins',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: Color(0xff0a0b0a),
+                          ),
+                        ),
+                      ],
+                    ),
+                    subtitle: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                         Container(
+                          
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: const Color(0xffEAEAEA),
+                        ),
+                        borderRadius: BorderRadius.circular(1.83),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Total Amout',
-                            style: TextStyle(
-                              color: Color(0xff797A7B),
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'poppins',
-                            ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: const Icon(Icons.remove, color: Colors.green,size: 12,),
+                            onPressed: ()=>_decrementQuantity(index),
                           ),
                           Text(
-                            'N${totalAmount + deliveryFee}',
-                            style: const TextStyle(
-                                color: Color(0xff363939),
-                                fontFamily: 'inter',
-                                fontWeight: FontWeight.w600),
+                            '${_cartItems[index]['quantity'].toInt()}',
+                            style: const TextStyle(fontSize: 12,fontWeight: FontWeight.w600,fontFamily: 'inter'),
+                          ),
+                          IconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: const Icon(Icons.add, color: Colors.green,size: 12,),
+                            onPressed: ()=>_incrementQuantity(index),
                           ),
                         ],
                       ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-                            backgroundColor: const Color(0xff408C2B),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(3.83))),
-                        child: const Text(
-                          "Checkout",
-                          style: TextStyle(color: Color(0xffFAFAFA)),
+                    ),
+                        const SizedBox(
+                          width: 6.75,
                         ),
-                      )
-                    ],
-                  )
-                ],
+                        Container(
+                          height: 22.96,
+                          width: 30.73,
+                          decoration:
+                              const BoxDecoration(color: Color(0xffCC474E)),
+                          child: Center(
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                size: 14,
+                                color: Color(0xffFFFFFF),
+                              ),
+                              onPressed: () {
+                                removeItem(index);
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    trailing: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Unit price",
+                          style: TextStyle(
+                            fontFamily: 'poppins',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Color(0xff5A5A5A),
+                          ),
+                        ),
+                        Text(
+                          'N${_cartItems[index]['product'].currentprice * _cartItems[index]['quantity']}',
+                          style: const TextStyle(
+                            fontFamily: 'poppins',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: Color(0xff0a0b0a),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-            ),
-          ),
-          const SizedBox(
-            height: 80,
-          ),
-          Row(
-            children: [
-              const Text(
-                "Recently viewed",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xff0A0B0A),
-                  fontWeight: FontWeight.w300,
-                  fontFamily: 'poppins',
-                ),
+              const SizedBox(
+                height: 48.74,
               ),
-              const Spacer(),
-              TextButton(
-                onPressed: () {},
-                child: const Text(
-                  "View all",
-                  style: TextStyle(
-                    color: Color(0xff408C2B),
-                    fontSize: 12,
-                    fontFamily: 'poppins',
+              Center(
+                child: Card(
+                  color: const Color(0xffFEFEFE),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: const BorderSide(color: Color(0xff408c2b))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(9.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        const Text(
+                          'Cart summary',
+                          style: const TextStyle(
+                            fontFamily: 'lora',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: Color(0xff0a0b0a),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 50),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Sub-total",
+                                style: const TextStyle(
+                                  fontFamily: 'poppins',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: Color(0xff6E6E6E),
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                "$totalAmount",
+                                style: const TextStyle(
+                                  fontFamily: 'poppins',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: Color(0xff6E6E6E),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 22,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 50),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Delivery",
+                                style: const TextStyle(
+                                  fontFamily: 'poppins',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: Color(0xff6E6E6E),
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                "$deliveryFee",
+                                style: const TextStyle(
+                                  fontFamily: 'poppins',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: Color(0xff6E6E6E),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Divider(
+                          color: Color(0xffcccbcb),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            OutlinedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              style: OutlinedButton.styleFrom(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  side: const BorderSide(
+                                    color: Color(0xff363939),
+                                  )),
+                              child: const Text(
+                                "Cancel",
+                                style: TextStyle(
+                                  color: Color(0xff363939),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 16,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Total Amount',
+                                  style: TextStyle(
+                                    color: Color(0xff797A7B),
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'poppins',
+                                  ),
+                                ),
+                                Text(
+                                  'N${totalAmount + deliveryFee}',
+                                  style: const TextStyle(
+                                      color: Color(0xff363939),
+                                      fontFamily: 'inter',
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              width: 16,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(9, 8, 9, 8),
+                                  backgroundColor: const Color(0xff408C2B),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(3.83))),
+                              child: const Text(
+                                "Checkout",
+                                style: TextStyle(color: Color(0xffFAFAFA)),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 59,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ],
-          ),
-          const Divider(),
-          const SizedBox(
-            height: 48,
-          ),
-          Expanded(
-            child: FutureBuilder<ProductsResponse>(
-              future: products,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: Animatedloading(),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.items.isEmpty) {
-                  return const Center(child: Text('No products found'));
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  final random = Random();
-                  final List<Productsdata> items =
-                      List.from(snapshot.data!.items);
-                  items.shuffle(random);
-                  const int subsetLength = 1;
-                  final List<Productsdata> randomSubset =
-                      items.take(subsetLength).toList();
-                  return SizedBox(
-                    height: 500,
-                    child: GridView.builder(
+              const SizedBox(
+                height: 80,
+              ),
+              Row(
+                children: [
+                  const Text(
+                    "You might like",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xff363939),
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'lora',
+                    ),
+                  ),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      "View all",
+                      style: TextStyle(
+                          color: Color(0xff797A7B),
+                          fontSize: 14,
+                          fontFamily: 'inter',
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(),
+              const SizedBox(
+                height: 48,
+              ),
+              FutureBuilder<ProductsResponse>(
+                future: products,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: Animatedloading(),
+                    );
+                  } else if (!snapshot.hasData ||
+                      snapshot.data!.items.isEmpty) {
+                    return const Center(child: Text('No products found'));
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    final random = Random();
+                    final List<Productsdata> items =
+                        List.from(snapshot.data!.items);
+                    items.shuffle(random);
+                    const int subsetLength = 1;
+                    final List<Productsdata> randomSubset =
+                        items.take(subsetLength).toList();
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 1,
@@ -378,7 +471,7 @@ class _CartState extends State<Cart> {
                       itemCount: randomSubset.length,
                       itemBuilder: (context, index) {
                         var prefix = randomSubset[index];
-
+          
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
@@ -429,7 +522,8 @@ class _CartState extends State<Cart> {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       fontSize: 10,
-                                                      color: Color(0xff797A7B)),
+                                                      color:
+                                                          Color(0xff797A7B)),
                                                 ),
                                                 const SizedBox(height: 2),
                                                 Text(
@@ -439,7 +533,8 @@ class _CartState extends State<Cart> {
                                                       fontWeight:
                                                           FontWeight.w600,
                                                       fontSize: 14,
-                                                      color: Color(0xff363939)),
+                                                      color:
+                                                          Color(0xff363939)),
                                                 ),
                                               ],
                                             ),
@@ -460,8 +555,8 @@ class _CartState extends State<Cart> {
                                                     shape:
                                                         RoundedRectangleBorder(
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              4),
+                                                          BorderRadius
+                                                              .circular(4),
                                                     ),
                                                   ),
                                                 );
@@ -474,7 +569,8 @@ class _CartState extends State<Cart> {
                                                   side: const BorderSide(
                                                       color: Colors.green),
                                                   borderRadius:
-                                                      BorderRadius.circular(6),
+                                                      BorderRadius.circular(
+                                                          6),
                                                 ),
                                               ),
                                               child: const Text(
@@ -497,13 +593,13 @@ class _CartState extends State<Cart> {
                           ),
                         );
                       },
-                    ),
-                  );
-                }
-              },
-            ),
+                    );
+                  }
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
