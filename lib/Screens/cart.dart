@@ -126,6 +126,7 @@ class _CartState extends State<Cart> {
                     height: 98.26,
                   ),
                   title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         _cartItems[index]['product'].uniqueid,
@@ -160,16 +161,30 @@ class _CartState extends State<Cart> {
                             ),
                             borderRadius: BorderRadius.circular(1.83)),
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: BoxConstraints(),
                               icon: const Icon(
                                 Icons.remove,
                                 size: 7,
                               ),
                               onPressed: () => _decrementQuantity(index),
                             ),
-                            Text('${_cartItems[index]['quantity'].toInt()}',style: TextStyle(fontSize: 12,fontFamily: 'inter',fontWeight: FontWeight.w600),),
+                            Flexible(
+                              child: Text(
+                                '${_cartItems[index]['quantity'].toInt()}',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: 'inter',
+                                    fontWeight: FontWeight.w600),
+                                    textAlign: TextAlign.center,
+                              ),
+                            ),
                             IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: BoxConstraints(),
                               icon: const Icon(
                                 Icons.add,
                                 size: 7,
@@ -182,7 +197,8 @@ class _CartState extends State<Cart> {
                       Container(
                         height: 22.96,
                         width: 30.73,
-                        decoration: const BoxDecoration(color: Color(0xffCC474E)),
+                        decoration:
+                            const BoxDecoration(color: Color(0xffCC474E)),
                         child: IconButton(
                           icon: const Icon(
                             Icons.delete,
@@ -194,15 +210,14 @@ class _CartState extends State<Cart> {
                           },
                         ),
                       ),
-                      const SizedBox(
-                        width: 48,
-                      ),
                     ],
                   ),
                   trailing: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Unit price",
-                      style:  TextStyle(
+                      const Text(
+                        "Unit price",
+                        style: TextStyle(
                           fontFamily: 'poppins',
                           fontWeight: FontWeight.w400,
                           fontSize: 12,
@@ -210,12 +225,14 @@ class _CartState extends State<Cart> {
                         ),
                       ),
                       Text(
-                          'N${_cartItems[index]['product'].currentprice * _cartItems[index]['quantity']}',style: const TextStyle(
+                        'N${_cartItems[index]['product'].currentprice * _cartItems[index]['quantity']}',
+                        style: const TextStyle(
                           fontFamily: 'poppins',
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
                           color: Color(0xff0a0b0a),
-                        ),),
+                        ),
+                      ),
                     ],
                   ),
                 );
