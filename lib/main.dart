@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shopsharrie/Screens/home.dart';
 import 'package:shopsharrie/Screens/screencontroller.dart';
+import 'package:shopsharrie/model/productsdata.dart';
 
 Future<void> main() async {
   if (kReleaseMode) {

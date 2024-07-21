@@ -33,6 +33,7 @@ class _HomeState extends State<Home> {
     }
   }
 
+  late List<Productsdata> cartItems;
   late Future<ProductsResponse> products;
   ScrollController scrollController = ScrollController();
   bool atStart = true;
@@ -40,7 +41,7 @@ class _HomeState extends State<Home> {
 
   void scrollLeft() {
     scrollController.animateTo(
-      scrollController.offset - 5,
+      scrollController.offset - 50,
       duration: const Duration(milliseconds: 100),
       curve: Curves.ease,
     );
@@ -48,23 +49,18 @@ class _HomeState extends State<Home> {
 
   void scrollRight() {
     scrollController.animateTo(
-      scrollController.offset + 5,
+      scrollController.offset + 50,
       duration: const Duration(milliseconds: 100),
       curve: Curves.ease,
     );
   }
+  
 
   @override
   void initState() {
     super.initState();
     products = getProducts();
-    scrollController.addListener(() {
-      setState(() {
-        atStart = scrollController.offset <= 0;
-        atEnd = scrollController.position.maxScrollExtent ==
-            scrollController.offset;
-      });
-    });
+    
   }
 
   @override
@@ -201,7 +197,7 @@ class _HomeState extends State<Home> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const EmptyCartScreen()));
+                                              Productdesc(product: prefix)));
                                 },
                                 child: Card(
                                   shape: RoundedRectangleBorder(
@@ -255,7 +251,7 @@ class _HomeState extends State<Home> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  '₦${prefix.currentprice.toString()}',
+                                                  "₦${prefix.currentprice.toString()}",
                                                   style: const TextStyle(
                                                     fontSize: 14,
                                                     fontFamily: 'poppins',
@@ -277,6 +273,21 @@ class _HomeState extends State<Home> {
                                                     context: context,
                                                     builder: (context) =>
                                                         AlertDialog(
+                                                      actions: [
+                                                        ElevatedButton(
+                                                            onPressed: () {
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      Productdesc(
+                                                                          product:
+                                                                              prefix),
+                                                                ),
+                                                              );
+                                                            },
+                                                            child: Text("Cart"))
+                                                      ],
                                                       title: const Text(
                                                           "Item Added"),
                                                       content: const Text(

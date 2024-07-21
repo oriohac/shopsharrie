@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'package:http/http.dart'
+    as http;
+
 class Productsdata {
   final String name;
   final List<Photo> photos;
@@ -6,6 +10,7 @@ class Productsdata {
   final double currentprice;
   final double availableQuantity;
   final String uniqueid;
+  // final List<String> categories;
   Productsdata(
       {required this.name,
       required this.photos,
@@ -13,7 +18,9 @@ class Productsdata {
       required this.isAvailable,
       required this.currentprice,
       required this.availableQuantity,
-      required this.uniqueid});
+      required this.uniqueid,
+      // required this.categories
+      });
 
   factory Productsdata.fromJson(dynamic json) {
     var photoList = json['photos'] as List;
@@ -29,6 +36,8 @@ class Productsdata {
     } else {
       currentPrice = 0.0;
     }
+    // var categoriesList = json['categories'] as List? ?? [];
+    // List<String> categories = categoriesList.map((i) => i as String).toList();
     return Productsdata(
       name: json['name'] ?? '',
       photos: photos,
@@ -36,7 +45,8 @@ class Productsdata {
       isAvailable: json['is_available'] ?? false,
       currentprice: currentPrice,
       availableQuantity: json['available_quantity'] ?? 0,
-      uniqueid: json['unique_id']?? '',
+      uniqueid: json['unique_id'] ?? '',
+      // categories: categories,
     );
   }
 }
@@ -71,3 +81,5 @@ class ProductsResponse {
     return ProductsResponse(items: itemsList);
   }
 }
+
+

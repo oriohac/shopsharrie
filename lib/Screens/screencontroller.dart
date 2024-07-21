@@ -3,8 +3,11 @@ import 'package:shopsharrie/Screens/home.dart';
 import 'package:shopsharrie/Screens/profile.dart';
 import 'package:shopsharrie/Screens/search.dart';
 import 'package:shopsharrie/Screens/wishlist.dart';
+import 'package:shopsharrie/model/productsdata.dart';
 
 class Screencontroller extends StatefulWidget {
+  
+
   const Screencontroller({super.key});
 
   @override
@@ -12,6 +15,7 @@ class Screencontroller extends StatefulWidget {
 }
 
 class _ScreencontrollerState extends State<Screencontroller> {
+  late Productsdata product;
   //initiial screen of the BottomNavigation
   int selectedScreen = 0;
 // function to update the screen according to what's selected in the BottomNavigation

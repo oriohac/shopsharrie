@@ -60,7 +60,9 @@ class _AddtocartState extends State<Addtocart> {
                     style: IconButton.styleFrom(
                       backgroundColor: const Color(0xffFAFAFA),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     icon: const Icon(Icons.arrow_back))),
             const Spacer(),
             const Padding(
@@ -84,18 +86,20 @@ class _AddtocartState extends State<Addtocart> {
                     height: 435,
                     decoration: const BoxDecoration(color: Color(0xffE4F5E0)),
                   ),
-                   SvgPicture.asset(
-                    'lib/assets/images/image.svg',
-                    height: 320,
-                    width: 320,
+                  Center(
+                    child: Image.asset(
+                      'lib/assets/images/backimg.png',
+                     height: 279,
+                        width: 284,
+                    ),
                   ),
                   Center(
                     child: Container(
                       margin: const EdgeInsets.only(top: 50),
                       child: Image.network(
                         'https://api.timbu.cloud/images/${widget.product.photos[0].url}',
-                        height: 280,
-                        width: 280,
+                        height: 220,
+                        width: 220,
                       ),
                     ),
                   ),
@@ -327,6 +331,7 @@ class _AddtocartState extends State<Addtocart> {
                       currentprice: widget.product.currentprice,
                       availableQuantity: _counter.toDouble(),
                       uniqueid: widget.product.uniqueid,
+                      // categories: widget.product.categories,
                     );
                     setState(() {
                       cartItems.add(updatedProduct);

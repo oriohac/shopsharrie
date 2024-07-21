@@ -46,8 +46,13 @@ class _ProductdescState extends State<Productdesc> {
             Padding(
                 padding: const EdgeInsets.only(left: 48.0),
                 child: IconButton(
-                 style:  IconButton.styleFrom(backgroundColor: Color(0xffFAFAFA),),
-                    onPressed: () {}, icon: const Icon(Icons.arrow_back))),
+                    style: IconButton.styleFrom(
+                      backgroundColor: Color(0xffFAFAFA),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back))),
             const Spacer(),
             const Padding(
               padding: EdgeInsets.only(right: 48.0),
@@ -71,18 +76,20 @@ class _ProductdescState extends State<Productdesc> {
                     height: 435,
                     decoration: const BoxDecoration(color: Color(0xffE4F5E0)),
                   ),
-                  SvgPicture.asset(
-                    'lib/assets/images/image.svg',
-                    height: 320,
-                    width: 320,
+                  Center(
+                    child: Image.asset(
+                      'lib/assets/images/backimg.png',
+                      height: 279,
+                      width: 284,
+                    ),
                   ),
                   Center(
                     child: Container(
                       margin: const EdgeInsets.only(top: 50),
                       child: Image.network(
                         'https://api.timbu.cloud/images/${widget.product.photos[0].url}',
-                        height: 280,
-                        width: 280,
+                        height: 220,
+                        width: 220,
                       ),
                     ),
                   ),
