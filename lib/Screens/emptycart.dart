@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shopsharrie/Screens/animatedloading.dart';
 import 'package:shopsharrie/Screens/home.dart';
+import 'package:shopsharrie/Screens/productdesc.dart';
 import 'package:shopsharrie/model/productsdata.dart';
 import 'package:http/http.dart' as http;
 
@@ -236,7 +237,6 @@ class _EmptyCartScreenState extends State<EmptyCartScreen> {
                                                   Text(
                                                     '₦${prefix.currentprice.toString()}',
                                                     style: const TextStyle(
-                                                        fontFamily: 'poppins',
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontSize: 14,
@@ -251,22 +251,13 @@ class _EmptyCartScreenState extends State<EmptyCartScreen> {
                                               width: 56,
                                               child: ElevatedButton(
                                                 onPressed: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        AlertDialog(
-                                                      title: const Text(
-                                                          "Item Added"),
-                                                      content: const Text(
-                                                          "Check it in your cart"),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(4),
-                                                      ),
-                                                    ),
-                                                  );
+                                                   Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    Productdesc(product: prefix),
+                              ),
+                            );
                                                 },
                                                 style:
                                                     ElevatedButton.styleFrom(

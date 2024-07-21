@@ -4,9 +4,11 @@ import 'dart:math';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shopsharrie/Screens/addtocart.dart';
 import 'package:shopsharrie/Screens/animatedloading.dart';
 import 'package:shopsharrie/Screens/cart.dart';
 import 'package:shopsharrie/Screens/emptycart.dart';
+import 'package:shopsharrie/Screens/orderhistory.dart';
 import 'package:shopsharrie/Screens/productdesc.dart';
 import 'package:shopsharrie/model/productsdata.dart';
 import 'package:http/http.dart' as http;
@@ -54,13 +56,11 @@ class _HomeState extends State<Home> {
       curve: Curves.ease,
     );
   }
-  
 
   @override
   void initState() {
     super.initState();
     products = getProducts();
-    
   }
 
   @override
@@ -99,14 +99,50 @@ class _HomeState extends State<Home> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Welcome, Jane',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: 'poppins',
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xff0A0B0A),
-                ),
+              Row(
+                children: [
+                  const Text(
+                    'Welcome, Jane',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'poppins',
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff0A0B0A),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 24,
+                    width: 56,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrderHistory(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(0),
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          side: const BorderSide(color: Color(0xff408c2b)),
+                          borderRadius: BorderRadius.circular(2.37),
+                        ),
+                      ),
+                      child: const Text(
+                        'Add to Cart',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 7.1,
+                          fontFamily: 'poppins',
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xff408c2b),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 16,
@@ -254,7 +290,6 @@ class _HomeState extends State<Home> {
                                                   "₦${prefix.currentprice.toString()}",
                                                   style: const TextStyle(
                                                     fontSize: 14,
-                                                    fontFamily: 'poppins',
                                                     fontWeight: FontWeight.w600,
                                                     color: Color(0xff363939),
                                                   ),
@@ -269,35 +304,12 @@ class _HomeState extends State<Home> {
                                               width: 56,
                                               child: ElevatedButton(
                                                 onPressed: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        AlertDialog(
-                                                      actions: [
-                                                        ElevatedButton(
-                                                            onPressed: () {
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      Productdesc(
-                                                                          product:
-                                                                              prefix),
-                                                                ),
-                                                              );
-                                                            },
-                                                            child: Text("Cart"))
-                                                      ],
-                                                      title: const Text(
-                                                          "Item Added"),
-                                                      content: const Text(
-                                                          "check it in your cart"),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                      ),
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Productdesc(
+                                                              product: prefix),
                                                     ),
                                                   );
                                                 },
@@ -383,6 +395,11 @@ class _HomeState extends State<Home> {
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
+                    final List<Productsdata> items =
+                        List.from(snapshot.data!.items);
+                    const int subsetLength = 8;
+                    final List<Productsdata> subset =
+                        items.take(subsetLength).toList();
                     return GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -390,7 +407,7 @@ class _HomeState extends State<Home> {
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                       ),
-                      itemCount: snapshot.data!.items.length,
+                      itemCount: subset.length,
                       itemBuilder: (context, index) {
                         var prefix = snapshot.data!.items[index];
 
@@ -459,7 +476,6 @@ class _HomeState extends State<Home> {
                                                   '₦${prefix.currentprice.toString()}',
                                                   style: const TextStyle(
                                                     fontSize: 14,
-                                                    fontFamily: 'poppins',
                                                     fontWeight: FontWeight.w600,
                                                     color: Color(0xff363939),
                                                   ),
@@ -472,20 +488,12 @@ class _HomeState extends State<Home> {
                                             width: 56,
                                             child: ElevatedButton(
                                               onPressed: () {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      AlertDialog(
-                                                    title: const Text(
-                                                        "Item Added"),
-                                                    content: const Text(
-                                                        "Check it in your cart"),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              4),
-                                                    ),
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Productdesc(
+                                                            product: prefix),
                                                   ),
                                                 );
                                               },
@@ -722,7 +730,11 @@ class _HomeState extends State<Home> {
                                               const SizedBox(height: 2),
                                               Text(
                                                 '₦${prefix.currentprice.toString()}',
-                                                style: const TextStyle(),
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(0xff363939),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -732,19 +744,12 @@ class _HomeState extends State<Home> {
                                           width: 56,
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    AlertDialog(
-                                                  title:
-                                                      const Text("Item Added"),
-                                                  content: const Text(
-                                                      "Check it in your cart"),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4),
-                                                  ),
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Productdesc(
+                                                          product: prefix),
                                                 ),
                                               );
                                             },

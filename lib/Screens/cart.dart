@@ -4,6 +4,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shopsharrie/Screens/animatedloading.dart';
+import 'package:shopsharrie/Screens/productdesc.dart';
+import 'package:shopsharrie/model/dbhelper.dart';
+import 'package:intl/intl.dart';
 import 'package:shopsharrie/model/productsdata.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,7 +39,7 @@ class _CartState extends State<Cart> {
 
   late List<Map<String, dynamic>> _cartItems;
   late Future<ProductsResponse> products;
-  double deliveryFee = 2;
+  double deliveryFee = 500;
   double totalAmount = 0;
   @override
   void initState() {
@@ -77,19 +80,22 @@ class _CartState extends State<Cart> {
   }
 
 //function to complete order and clear the cart
-  void completeOrder() {
+  void completeOrder() async {
+    // Save order history to SQLite
+  for (var item in _cartItems) {
+    await DBHelper.instance.insertOrder({
+      'product_name': item['product'].name,
+      'quantity': item['quantity'],
+      'price': item['product'].currentprice * item['quantity'],
+      'order_date': DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+    });
+  }
     setState(() {
       _cartItems.clear();
     });
 
-//Success message after completing order
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Success'),
-      behavior: SnackBarBehavior.floating,
-      duration: Duration(seconds: 2),
-      dismissDirection: DismissDirection.horizontal,
-    ));
-    Navigator.pushNamed(context, "/ordersuccess");
+
+    Navigator.push;
   }
 
   cancelOrder({int? index}) {
@@ -279,9 +285,8 @@ class _CartState extends State<Cart> {
                                 height: 4,
                               ),
                               Text(
-                                'N${_cartItems[index]['product'].currentprice * _cartItems[index]['quantity']}',
+                                '₦${_cartItems[index]['product'].currentprice * _cartItems[index]['quantity']}',
                                 style: const TextStyle(
-                                  fontFamily: 'poppins',
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16,
                                   color: Color(0xff0a0b0a),
@@ -343,9 +348,8 @@ class _CartState extends State<Cart> {
                                 ),
                                 const Spacer(),
                                 Text(
-                                  "$totalAmount",
+                                  "₦$totalAmount",
                                   style: const TextStyle(
-                                    fontFamily: 'poppins',
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                     color: Color(0xff6E6E6E),
@@ -373,9 +377,8 @@ class _CartState extends State<Cart> {
                                 ),
                                 const Spacer(),
                                 Text(
-                                  "$deliveryFee",
+                                  "₦$deliveryFee",
                                   style: const TextStyle(
-                                    fontFamily: 'poppins',
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                     color: Color(0xff6E6E6E),
@@ -433,7 +436,6 @@ class _CartState extends State<Cart> {
                                     "₦${totalAmount + deliveryFee}",
                                     style: const TextStyle(
                                         color: Color(0xff363939),
-                                        fontFamily: 'inter',
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ],
@@ -583,9 +585,8 @@ class _CartState extends State<Cart> {
                                                   ),
                                                   const SizedBox(height: 2),
                                                   Text(
-                                                    "${prefix.currentprice.toString()}",
+                                                    "₦${prefix.currentprice.toString()}",
                                                     style: const TextStyle(
-                                                        fontFamily: 'poppins',
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontSize: 14,
@@ -600,20 +601,12 @@ class _CartState extends State<Cart> {
                                               width: 56,
                                               child: ElevatedButton(
                                                 onPressed: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        AlertDialog(
-                                                      title: const Text(
-                                                          "Item Added"),
-                                                      content: const Text(
-                                                          "Check it in your cart"),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(4),
-                                                      ),
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Productdesc(
+                                                              product: prefix),
                                                     ),
                                                   );
                                                 },

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopsharrie/Screens/cart.dart';
 import 'package:shopsharrie/model/productsdata.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class Addtocart extends StatefulWidget {
   final List<Productsdata> cartItems;
@@ -112,8 +111,8 @@ class _AddtocartState extends State<Addtocart> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Number of images per row
-                  childAspectRatio: 1, // Adjust aspect ratio as needed
+                  crossAxisCount: 2, 
+                  childAspectRatio: 1, 
                   crossAxisSpacing: 0,
                   mainAxisSpacing: 0,
                 ),
@@ -313,7 +312,7 @@ class _AddtocartState extends State<Addtocart> {
                       ),
                     ),
                     Text(
-                      'N${widget.product.currentprice}',
+                      '₦${widget.product.currentprice}',
                       style: const TextStyle(
                           color: Color(0xff363939),
                           fontFamily: 'inter',

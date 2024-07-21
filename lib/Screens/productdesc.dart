@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shopsharrie/Screens/addtocart.dart';
 import 'package:shopsharrie/model/productsdata.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class Productdesc extends StatefulWidget {
   final Productsdata product;

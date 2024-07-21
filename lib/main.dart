@@ -24,6 +24,7 @@ class Shopsharrie extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home:Screencontroller(),
+      
     );
   }
 }
