@@ -1,13 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shopsharrie/Screens/addtocart.dart';
 import 'package:shopsharrie/Screens/animatedloading.dart';
-import 'package:shopsharrie/Screens/cart.dart';
-import 'package:shopsharrie/Screens/emptycart.dart';
 import 'package:shopsharrie/Screens/orderhistory.dart';
 import 'package:shopsharrie/Screens/productdesc.dart';
 import 'package:shopsharrie/model/productsdata.dart';
@@ -110,9 +106,9 @@ class _HomeState extends State<Home> {
                       color: Color(0xff0A0B0A),
                     ),
                   ),
+                  Spacer(),
                   SizedBox(
-                    height: 24,
-                    width: 56,
+                    height: 30,
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -131,7 +127,7 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       child: const Text(
-                        'Add to Cart',
+                        'Order history',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 7.1,
@@ -397,7 +393,7 @@ class _HomeState extends State<Home> {
                   } else {
                     final List<Productsdata> items =
                         List.from(snapshot.data!.items);
-                    const int subsetLength = 8;
+                    const int subsetLength = 16;
                     final List<Productsdata> subset =
                         items.take(subsetLength).toList();
                     return GridView.builder(

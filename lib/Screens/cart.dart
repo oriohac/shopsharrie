@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shopsharrie/Screens/animatedloading.dart';
+import 'package:shopsharrie/Screens/emptycart.dart';
 import 'package:shopsharrie/Screens/productdesc.dart';
 import 'package:shopsharrie/model/dbhelper.dart';
 import 'package:intl/intl.dart';
@@ -82,20 +83,31 @@ class _CartState extends State<Cart> {
 //function to complete order and clear the cart
   void completeOrder() async {
     // Save order history to SQLite
-  for (var item in _cartItems) {
-    await DBHelper.instance.insertOrder({
-      'product_name': item['product'].name,
-      'quantity': item['quantity'],
-      'price': item['product'].currentprice * item['quantity'],
-      'order_date': DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-    });
-  }
+    for (var item in _cartItems) {
+      await DBHelper.instance.insertOrder({
+        'product_name': item['product'].name,
+        'quantity': item['quantity'],
+        'price': item['product'].currentprice * item['quantity'],
+        'order_date': DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+      });
+    }
     setState(() {
       _cartItems.clear();
     });
-
-
-    Navigator.push;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Payment Success!!"),
+        backgroundColor: Colors.green[300],
+        dismissDirection: DismissDirection.horizontal,
+        duration: Duration(seconds: 4),
+      ),
+    );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EmptyCartScreen(),
+      ),
+    );
   }
 
   cancelOrder({int? index}) {
@@ -444,7 +456,9 @@ class _CartState extends State<Cart> {
                                 width: 16,
                               ),
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  completeOrder();
+                                },
                                 style: ElevatedButton.styleFrom(
                                     padding:
                                         const EdgeInsets.fromLTRB(9, 8, 9, 8),
