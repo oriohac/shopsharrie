@@ -10,11 +10,11 @@ Make sure you have Flutter set up on your computer.
 
 You can then clone the repository with the command bellow:
 
-`git clone https://github.com/orihac/shopasharrie.git`
+`git clone https://github.com/orihac/shopsharrie.git`
 
 The change directory to the cloned project's directory using:
 
-`cd shopasharrie/`
+`cd shopashrrie/`
 
 When you are in the directory use the below code to run the app.
 
